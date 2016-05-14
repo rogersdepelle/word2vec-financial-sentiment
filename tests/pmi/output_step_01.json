@@ -1,0 +1,36 @@
+{
+  "1": {
+    "label": "positive",
+    "text": [
+      "brazil",
+      "gasoline",
+      "output",
+      "rises",
+      "diesel",
+      "output",
+      "falls",
+      "brazil",
+      "petrobras"
+    ]
+  },
+  "2": {
+    "label": "positive",
+    "text": [
+      "brazil",
+      "march",
+      "gasoline",
+      "output",
+      "rises"
+    ]
+  },
+  "3": {
+    "label": "negative",
+    "text": [
+      "brazil",
+      "tenders",
+      "petrobras",
+      "scandal",
+      "brazil"
+    ]
+  }
+}
