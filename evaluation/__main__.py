@@ -1,4 +1,5 @@
-# ctrl + shift + F10
+__author__ = "Edimar Manica"
+
 # libraries
 import json
 import os
@@ -7,7 +8,7 @@ from cProfile import run
 from pprint import pprint
 
 
-def compute_all_metrics(execution_id, path_input, path_output):
+def compute_all_metrics(execution_id, path_input, path_output, formula, append):
     from evaluation.metrics import accuracy, precision, recall, f1, specificity
     """
     Computes all metrics and persistes in a csv
@@ -16,6 +17,8 @@ def compute_all_metrics(execution_id, path_input, path_output):
         execution_id (int): identifier of the execution
         path_input (string): path of the file that contains the classifications
         path_out (string): path of the file that will persist the metrics
+        formula (string): mean_max | mean_mean
+        append (boolean): true | false
     """
 
     # loading results
@@ -24,19 +27,19 @@ def compute_all_metrics(execution_id, path_input, path_output):
 
     # computing metrics
     tp = tn = fp = fn = 0
-    for id_news in data:
-        if (data[id_news]["mean_max"]["positive"] > data[id_news]["mean_max"]["negative"]):
-            if (data[id_news]["label"] == "positive"):
+    for i in range(0, len(data)):
+        if (data[i]['values'][formula]['positive'] > data[i]['values'][formula]['negative']):
+            if data[i]['values']['label'] == 'positive':
                 tp += 1
             else:
                 fp += 1
-        elif data[id_news]["mean_max"]["positive"] < data[id_news]["mean_max"]["negative"]:
-            if (data[id_news]["label"] == "negative"):
+        elif (data[i]['values'][formula]['positive'] < data[i]['values'][formula]['negative']):
+            if (data[i]['values']['label'] == 'negative'):
                 tn += 1
             else:
                 fn += 1
         else:
-            raise Exception("Positive similarity equals to negative similarity to news " + id_news)
+            raise Exception("Positive similarity equals to negative similarity to news " + data[i]['id'])
 
     accuracy = accuracy(tp, tn, fp, fn)
     recall = recall(tp, fn)
@@ -45,12 +48,16 @@ def compute_all_metrics(execution_id, path_input, path_output):
     specificity = specificity(tn, fp);
 
     # persiting the results
-    with open(path_output, 'wb') as csvfile:
+    with open(path_output, 'a' if append else 'w') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=',')
-        spamwriter.writerow(
-            ['execution_id', 'tp', 'tn', 'fp', 'fn', 'accuracy', 'precision', 'recall', 'f1', 'specificity'])
+        if (not append):
+            spamwriter.writerow(
+                ['execution_id', 'tp', 'tn', 'fp', 'fn', 'accuracy', 'precision', 'recall', 'f1', 'specificity'])
         spamwriter.writerow([execution_id, tp, tn, fp, fn, accuracy, precision, recall, f1, specificity])
 
 
 compute_all_metrics(1, os.getcwd() + '/../tests/evaluation/output_step_03.json',
-                os.getcwd() + '/../tests/evaluation/output_step_04.csv')
+                    os.getcwd() + '/../tests/evaluation/output_step_04.csv', "mean_max", False)
+
+compute_all_metrics(2, os.getcwd() + '/../tests/evaluation/output_step_03.json',
+                    os.getcwd() + '/../tests/evaluation/output_step_04.csv', "mean_mean", True)
