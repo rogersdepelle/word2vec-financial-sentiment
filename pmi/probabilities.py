@@ -49,7 +49,7 @@ def _pmi_odds_(p_p, p_n):
         """
     #print (p_p, p_n)
     alfa = 0.5
-    return math.log(((p_p * (1-p_n))+alfa) / ((p_n* (1-p_p))+alfa))
+    return math.log10(((p_p * (1-p_n))+alfa) / ((p_n* (1-p_p))+alfa))
 
 
 def pmi_odds(pnx, pn, nnx, nn):

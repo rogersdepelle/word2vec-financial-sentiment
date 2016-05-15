@@ -45,6 +45,7 @@ pn, nn, positive_words, negative_words = frequencies(training_set, vocabulary)
 
 terms = {"positive":[], "negative":[]}
 for word in vocabulary:
+    #print (word, pn, nn, positive_words[word], negative_words[word])
     positive_pmi = pmi_odds(positive_words[word], pn, negative_words[word], nn)
     terms["positive"].append((word, positive_pmi))
     negative_pmi = pmi_odds(negative_words[word], nn, positive_words[word], pn)
