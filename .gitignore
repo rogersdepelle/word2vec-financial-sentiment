@@ -1,3 +1,4 @@
 *.bin
 *.pye
 *.pyc
+*.json
