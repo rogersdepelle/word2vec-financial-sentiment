@@ -3,6 +3,7 @@
 import json
 import sys
 import math
+import os
 
 def create_vocabulary(news):
     vocabulary = []
@@ -42,7 +43,7 @@ def compute_pmi(p_word, p_label, p_word_label):
         pmi = 0.0
     return pmi
 
-news_file_path = sys.argv[1]
+news_file_path = os.getcwd() +'/../files/training_with_duplicates.json'
 news_file = open(news_file_path, "r")
 training_set = json.load(news_file)
 news_file.close()
@@ -77,7 +78,7 @@ for word in vocabulary:
 terms["positive"].sort(key=lambda tup: tup[1], reverse=True)
 terms["negative"].sort(key=lambda tup: tup[1], reverse=True)    
     
-terms_file = open("terms.json", "w")
+terms_file = open(os.getcwd() +'/../files/terms.json', "w")
 json.dump(terms, terms_file)
 terms_file.close()
 

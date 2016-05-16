@@ -16,7 +16,11 @@ def accuracy(tp, tn, fp, fn):
     Returns:
         float: accuracy
     """
-    return float(tp + tn) / (tp + tn + fp + fn)
+    try:
+        return float(tp + tn) / (tp + tn + fp + fn)
+    except ZeroDivisionError:
+        return 0
+
 
 
 def precision(tp, fp):
@@ -30,7 +34,10 @@ def precision(tp, fp):
     Returns:
         float: precision
         """
-    return float(tp) / (tp + fp)
+    try:
+        return float(tp) / (tp + fp)
+    except ZeroDivisionError:
+        return 0
 
 
 def recall(tp, fn):
@@ -44,7 +51,11 @@ def recall(tp, fn):
     Returns:
         float: precision
     """
-    return float(tp) / (tp + fn)
+    try:
+        return float(tp) / (tp + fn)
+    except ZeroDivisionError:
+        return 0
+
 
 def specificity(tn, fp):
     """
@@ -57,7 +68,10 @@ def specificity(tn, fp):
     Returns:
         float: precision
         """
-    return float(tn) / (tn + fp)
+    try:
+        return float(tn) / (tn + fp)
+    except ZeroDivisionError:
+        return 0
 
 def f1 (p, r):
     """
@@ -70,5 +84,9 @@ def f1 (p, r):
     Returns:
         float: F1
         """
-    return 2 * (p*r) / (p+r)
+    try:
+        return 2 * (p*r) / (p+r)
+    except ZeroDivisionError:
+        return 0
+
 

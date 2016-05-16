@@ -9,7 +9,7 @@ from pprint import pprint
 
 
 def compute_all_metrics(execution_id, path_input, path_output, formula, append):
-    from evaluation.metrics import accuracy, precision, recall, f1, specificity
+    from metrics import accuracy, precision, recall, f1, specificity
     """
     Computes all metrics and persistes in a csv
 
@@ -28,7 +28,7 @@ def compute_all_metrics(execution_id, path_input, path_output, formula, append):
     # computing metrics
     tp = tn = fp = fn = 0
     for i in range(0, len(data)):
-        if (data[i]['values'][formula]['positive'] > data[i]['values'][formula]['negative']):
+        if (data[i]['values'][formula]['positive'] >= data[i]['values'][formula]['negative']):
             if data[i]['values']['label'] == 'positive':
                 tp += 1
             else:
@@ -56,8 +56,8 @@ def compute_all_metrics(execution_id, path_input, path_output, formula, append):
         spamwriter.writerow([execution_id, tp, tn, fp, fn, accuracy, precision, recall, f1, specificity])
 
 
-compute_all_metrics(1, os.getcwd() + '/../tests/evaluation/output_step_03.json',
-                    os.getcwd() + '/../tests/evaluation/output_step_04.csv', "mean_max", False)
+compute_all_metrics(1, os.getcwd() + '/../files/news_and_similarity02.json',
+                    os.getcwd() + '/../files/evaluation02.csv', "mean_max", False)
 
-compute_all_metrics(2, os.getcwd() + '/../tests/evaluation/output_step_03.json',
-                    os.getcwd() + '/../tests/evaluation/output_step_04.csv', "mean_mean", True)
+compute_all_metrics(2, os.getcwd() + '/../files/news_and_similarity02.json',
+                    os.getcwd() + '/../files/evaluation02.csv', "mean_mean", True)

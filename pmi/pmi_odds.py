@@ -4,7 +4,7 @@
 import json
 import os
 
-from pmi.probabilities import pmi_odds
+from probabilities import pmi_odds
 
 __author__      = "Edimar Manica"
 
@@ -33,7 +33,7 @@ def frequencies(news, vocabulary):
     return pn, nn, positive_words, negative_words
 
 
-with open(os.getcwd() + '/../tests/pmi/output_step_01.json', "r") as news_file:
+with open(os.getcwd() + '/../files/training_with_duplicates.json', "r") as news_file:
     training_set = json.load(news_file)
 #print(training_set)
 
@@ -51,7 +51,11 @@ for word in vocabulary:
     negative_pmi = pmi_odds(negative_words[word], nn, positive_words[word], pn)
     terms["negative"].append((word, negative_pmi))
 
-with open(os.getcwd() + '/../tests/pmi/output_step_02.json', "w") as terms_file:
+
+terms["positive"].sort(key=lambda tup: tup[1], reverse=True)
+terms["negative"].sort(key=lambda tup: tup[1], reverse=True)
+
+with open(os.getcwd() + '/../files/terms02.json', "w") as terms_file:
     json.dump(terms, terms_file)
 
 
