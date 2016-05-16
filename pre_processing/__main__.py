@@ -1,3 +1,5 @@
+"for run(in up dir): $python pre_processing"
+
 import csv
 import json
 import re
@@ -9,13 +11,13 @@ from datetime import datetime
 
 petr4_daily_file = open('files/petr4_daily.csv', 'rb')
 petr4_daily = csv.DictReader(petr4_daily_file)
+petr4_daily = [x for x in petr4_daily]
 
 petr4_weekly_file = open('files/petr4_weekly.csv', 'rb')
 petr4_weekly = csv.DictReader(petr4_weekly_file)
+petr4_weekly = [x for x in petr4_weekly]
 
 stopwords = nltk_stopwords.words("english")
-
-log = open('files/log.json', 'w')
 
 tree = ElementTree.parse('files/pbr_0216.xml')
 
@@ -23,6 +25,9 @@ pbr = tree.getroot()
 
 pbr_with_duplicates = {}
 pbr_without_duplicates = {}
+news_list = set()
+invalide_news = []
+weekend_news = []
 
 for news in pbr[0]:
     try:
@@ -31,43 +36,50 @@ for news in pbr[0]:
         
         news_date = datetime.strptime(doc[1].text[:-4], '%a %b %d, %Y %I:%M%p')
         for day in petr4_daily:
-            if day['Date'] == news_date.strftime('%Y-%m-%d') and day['Volume'] != '000':
-                if float(day['Close']) - float(day['Open']) > 0:
-                    label = "positive"
+            if day['Date'] == news_date.strftime('%Y-%m-%d'):
+                if day['Volume'] != '000':
+                    if float(day['Close']) - float(day['Open']) >= 0:
+                        label = "positive"
+                    else:
+                        label = "negative"
+
+                    doc = doc[2].text + doc[3].text
+                    clean_doc = doc.lower().split()
+
+                    word_list = set()
+                    for word in clean_doc:
+                        clean_word = re.sub('[^a-z]', '', word)
+                        if clean_word and clean_word not in stopwords:
+                            word_list.add(clean_word)
+                    word_list = list(word_list)
+
+                    pbr_with_duplicates[news_id] = {}
+                    pbr_with_duplicates[news_id]['text'] = word_list
+                    pbr_with_duplicates[news_id]['label'] = label
+                    if doc not in news_list:
+                        pbr_without_duplicates[news_id] = pbr_with_duplicates[news_id].copy()
+                        news_list.add(doc)
+                    break
                 else:
-                    label = "negative"
-
-                doc = doc[2].text + doc[3].text
-                doc = doc.lower().split()
-
-                word_list = set()
-                for word in doc:
-                    clean_word = re.sub('[^a-z]', '', word)
-                    if clean_word and clean_word not in stopwords:
-                        word_list.add(clean_word)
-                word_list = list(word_list)
-
-                pbr_with_duplicates[news_id] = {}
-                pbr_with_duplicates[news_id]['text'] = word_list
-                pbr_with_duplicates[news_id]['label'] = label
-                if word_list not in pbr_without_duplicates.values():
-                    pbr_without_duplicates[news_id] = pbr_with_duplicates[news_id].copy()
-                break
+                    weekend_news.append(news_id)
     except:
-        log.write("\nInvalid news: " + news_id)
-
-training_with_duplicates = open('files/training_with_duplicates.json', 'w')
-training_without_duplicates = open('files/training_without_duplicates.json', 'w')
-
-log.write("\n\nPBR With Duplicates Total: " + str(len(pbr_with_duplicates)))
-log.write("\nPBR Without Duplicates Total: " + str(len(pbr_without_duplicates)))
-
-json.dump(pbr_with_duplicates, training_with_duplicates)
-json.dump(pbr_without_duplicates, training_without_duplicates)
-
-training_with_duplicates.close()
-training_without_duplicates.close()
-log.close()
+        invalide_news.append(news_id)
 
 petr4_daily_file.close()
 petr4_weekly_file.close()
+
+training_with_duplicates = open('files/training_with_duplicates.json', 'w')
+json.dump(pbr_with_duplicates, training_with_duplicates)
+training_with_duplicates.close()
+
+training_without_duplicates = open('files/training_without_duplicates.json', 'w')
+json.dump(pbr_without_duplicates, training_without_duplicates)
+training_without_duplicates.close()
+
+log = open('files/log.json', 'w')
+log.write("Pre Processing Logs")
+log.write("\n\nPBR With Duplicates Total: " + str(len(pbr_with_duplicates)))
+log.write("\nPBR Without Duplicates Total: " + str(len(pbr_without_duplicates)))
+log.write("\n\nInvalid News: " + str(invalide_news))
+log.write("\nWeekend News: " + str(weekend_news))
+log.close()
