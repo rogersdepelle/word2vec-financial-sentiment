@@ -213,14 +213,3 @@ def executarsemana():
     similarity_testsentences_ktearms(model,path_datatest_json_1,path_k_pos_neg_3,path_output_2)
     similarity_testsentences_ktearms(model,path_datatest_json_2,path_k_pos_neg_2,path_output_3)
     similarity_testsentences_ktearms(model,path_datatest_json_2,path_k_pos_neg_4,path_output_4)
-
-
-
-executarsemana()
-
-
-
-
-
-
-
