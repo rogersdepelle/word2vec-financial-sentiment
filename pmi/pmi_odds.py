@@ -81,5 +81,3 @@ def pmi_odds_weekly():
 
     pmi_odd(path_datatrain_json_1,pathoutput_k_terms3)
     pmi_odd(path_datatrain_json_2,pathoutput_k_terms4)
-
-pmi_odds_weekly()
