@@ -32,31 +32,54 @@ def frequencies(news, vocabulary):
 
     return pn, nn, positive_words, negative_words
 
+def pmi_odd(path_input,path_output):
+    with open(path_input, "r") as news_file:
+        training_set = json.load(news_file)
+    #print(training_set)
 
-with open(os.getcwd() + '/../files/training_with_duplicates.json', "r") as news_file:
-    training_set = json.load(news_file)
-#print(training_set)
+    vocabulary = create_vocabulary(training_set)
+    #print(vocabulary)
 
-vocabulary = create_vocabulary(training_set)
-#print(vocabulary)
+    pn, nn, positive_words, negative_words = frequencies(training_set, vocabulary)
+    #print (pn, nn, positive_words, negative_words)
 
-pn, nn, positive_words, negative_words = frequencies(training_set, vocabulary)
-#print (pn, nn, positive_words, negative_words)
-
-terms = {"positive":[], "negative":[]}
-for word in vocabulary:
-    #print (word, pn, nn, positive_words[word], negative_words[word])
-    positive_pmi = pmi_odds(positive_words[word], pn, negative_words[word], nn)
-    terms["positive"].append((word, positive_pmi))
-    negative_pmi = pmi_odds(negative_words[word], nn, positive_words[word], pn)
-    terms["negative"].append((word, negative_pmi))
-
-
-terms["positive"].sort(key=lambda tup: tup[1], reverse=True)
-terms["negative"].sort(key=lambda tup: tup[1], reverse=True)
-
-with open(os.getcwd() + '/../files/terms02.json', "w") as terms_file:
-    json.dump(terms, terms_file)
+    terms = {"positive":[], "negative":[]}
+    for word in vocabulary:
+        #print (word, pn, nn, positive_words[word], negative_words[word])
+        positive_pmi = pmi_odds(positive_words[word], pn, negative_words[word], nn)
+        terms["positive"].append((word, positive_pmi))
+        negative_pmi = pmi_odds(negative_words[word], nn, positive_words[word], pn)
+        terms["negative"].append((word, negative_pmi))
 
 
+    terms["positive"].sort(key=lambda tup: tup[1], reverse=True)
+    terms["negative"].sort(key=lambda tup: tup[1], reverse=True)
 
+    with open(path_output, "w") as terms_file:
+        json.dump(terms, terms_file)
+
+def pmi_odds_daily():
+    #train data
+    path_datatrain_json_1=os.getcwd() +'/../files/training_with_duplicates.json'
+    path_datatrain_json_2=os.getcwd() +'/../files/training_without_duplicates.json'
+
+    #output kterms
+    pathoutput_k_terms3 = os.getcwd() +'/../files/terms03.json'
+    pathoutput_k_terms4 = os.getcwd() +'/../files/terms04.json'
+
+    pmi_odd(path_datatrain_json_1,pathoutput_k_terms3)
+    pmi_odd(path_datatrain_json_2,pathoutput_k_terms4)
+
+def pmi_odds_weekly():
+    #train data
+    path_datatrain_json_1=os.getcwd() +'/../files2/weekly_with_duplicates_training.json'
+    path_datatrain_json_2=os.getcwd() +'/../files2/weekly_without_duplicates_training.json'
+
+    #output kterms
+    pathoutput_k_terms3 = os.getcwd() +'/../files2/terms03.json'
+    pathoutput_k_terms4 = os.getcwd() +'/../files2/terms04.json'
+
+    pmi_odd(path_datatrain_json_1,pathoutput_k_terms3)
+    pmi_odd(path_datatrain_json_2,pathoutput_k_terms4)
+
+pmi_odds_weekly()

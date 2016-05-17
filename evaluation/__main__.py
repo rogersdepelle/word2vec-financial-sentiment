@@ -56,8 +56,34 @@ def compute_all_metrics(execution_id, path_input, path_output, formula, append):
         spamwriter.writerow([execution_id, tp, tn, fp, fn, accuracy, precision, recall, f1, specificity])
 
 
-compute_all_metrics(1, os.getcwd() + '/../files/news_and_similarity02.json',
-                    os.getcwd() + '/../files/evaluation02.csv', "mean_max", False)
+#mean_max  com_duplicatas pmi
+compute_all_metrics(1, os.getcwd() + '/../files/news_and_similarity01.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_max", False)
 
-compute_all_metrics(2, os.getcwd() + '/../files/news_and_similarity02.json',
-                    os.getcwd() + '/../files/evaluation02.csv', "mean_mean", True)
+#mean_mean  com_duplicatas pmi
+compute_all_metrics(2, os.getcwd() + '/../files/news_and_similarity01.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_mean", True)
+
+#mean_max com_duplicatas pmi_odds
+compute_all_metrics(3, os.getcwd() + '/../files/news_and_similarity02.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_max", True)
+
+#mean_mean com_duplicatas pmi_odds
+compute_all_metrics(4, os.getcwd() + '/../files/news_and_similarity02.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_mean", True)
+
+# mean_max sem_duplicatas pmi
+compute_all_metrics(5, os.getcwd() + '/../files/news_and_similarity03.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_max", True)
+
+# mean_mean sem_duplicatas pmi
+compute_all_metrics(6, os.getcwd() + '/../files/news_and_similarity03.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_mean", True)
+
+# mean_max sem_duplicatas pmi_odds
+compute_all_metrics(7, os.getcwd() + '/../files/news_and_similarity04.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_max", True)
+
+# mean_mean sem_duplicatas pmi_odds
+compute_all_metrics(8, os.getcwd() + '/../files/news_and_similarity04.json',
+                    os.getcwd() + '/../files/evaluation.csv', "mean_mean", True)

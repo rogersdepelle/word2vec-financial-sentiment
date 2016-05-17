@@ -43,49 +43,78 @@ def compute_pmi(p_word, p_label, p_word_label):
         pmi = 0.0
     return pmi
 
-news_file_path = os.getcwd() +'/../files/training_with_duplicates.json'
-news_file = open(news_file_path, "r")
-training_set = json.load(news_file)
-news_file.close()
-#print(training_set)
+def pmi(path_input,path_output):
+    #news_file_path = os.getcwd() +'/../files/training_with_duplicates.json'
+    news_file = open(path_input, "r")
+    training_set = json.load(news_file)
+    news_file.close()
+    #print(training_set)
 
-vocabulary = create_vocabulary(training_set)
-#print(vocabulary)
+    vocabulary = create_vocabulary(training_set)
+    #print(vocabulary)
 
-n_positive_news, n_negative_news = count_labels(training_set)
-#print(n_positive_news, n_negative_news)
+    n_positive_news, n_negative_news = count_labels(training_set)
+    #print(n_positive_news, n_negative_news)
 
-positive_words, negative_words, total_words = count_words(training_set, vocabulary)
-#print(positive_words)
-#print(negative_words)
-#print(total_words)
+    positive_words, negative_words, total_words = count_words(training_set, vocabulary)
+    #print(positive_words)
+    #print(negative_words)
+    #print(total_words)
 
-total_positive_words = 0.0
-for word in positive_words:
-    total_positive_words += positive_words[word]
+    total_positive_words = 0.0
+    for word in positive_words:
+        total_positive_words += positive_words[word]
 
-total_negative_words = 0.0
-for word in negative_words:
-    total_negative_words += negative_words[word]
+    total_negative_words = 0.0
+    for word in negative_words:
+        total_negative_words += negative_words[word]
 
-terms = {"positive":[], "negative":[]}
-for word in vocabulary:
-    positive_pmi = compute_pmi((positive_words[word] + negative_words[word]) / total_words, n_positive_news / len(training_set), positive_words[word] / total_positive_words)
-    terms["positive"].append((word, positive_pmi))
-    negative_pmi = compute_pmi((positive_words[word] + negative_words[word]) / total_words, n_negative_news / len(training_set), negative_words[word] / total_negative_words)
-    terms["negative"].append((word, negative_pmi))
-    
-terms["positive"].sort(key=lambda tup: tup[1], reverse=True)
-terms["negative"].sort(key=lambda tup: tup[1], reverse=True)    
-    
-terms_file = open(os.getcwd() +'/../files/terms.json', "w")
-json.dump(terms, terms_file)
-terms_file.close()
+    terms = {"positive":[], "negative":[]}
+    for word in vocabulary:
+        positive_pmi = compute_pmi((positive_words[word] + negative_words[word]) / total_words, n_positive_news / len(training_set), positive_words[word] / total_positive_words)
+        terms["positive"].append((word, positive_pmi))
+        negative_pmi = compute_pmi((positive_words[word] + negative_words[word]) / total_words, n_negative_news / len(training_set), negative_words[word] / total_negative_words)
+        terms["negative"].append((word, negative_pmi))
 
+    terms["positive"].sort(key=lambda tup: tup[1], reverse=True)
+    terms["negative"].sort(key=lambda tup: tup[1], reverse=True)
 
-
+    terms_file = open(path_output, "w")
+    json.dump(terms, terms_file)
+    terms_file.close()
 
 
+def pmi_daily():
+    #train data
+    path_datatrain_json_1=os.getcwd() +'/../files/training_with_duplicates.json'
+    path_datatrain_json_2=os.getcwd() +'/../files/training_without_duplicates.json'
+
+    #output kterms
+    pathoutput_k_terms1 = os.getcwd() +'/../files/terms01.json'
+    pathoutput_k_terms2 = os.getcwd() +'/../files/terms02.json'
+
+    pmi(path_datatrain_json_1,pathoutput_k_terms1)
+    pmi(path_datatrain_json_2,pathoutput_k_terms2)
+
+    pmi(path_datatrain_json_1,pathoutput_k_terms1)
+    pmi(path_datatrain_json_2,pathoutput_k_terms2)
+
+def pmi_weekly():
+    #train data
+    path_datatrain_json_1=os.getcwd() +'/../files2/weekly_with_duplicates_training.json'
+    path_datatrain_json_2=os.getcwd() +'/../files2/weekly_without_duplicates_training.json'
+
+    #output kterms
+    pathoutput_k_terms1 = os.getcwd() +'/../files2/terms01.json'
+    pathoutput_k_terms2 = os.getcwd() +'/../files2/terms02.json'
+
+    pmi(path_datatrain_json_1,pathoutput_k_terms1)
+    pmi(path_datatrain_json_2,pathoutput_k_terms2)
+
+    pmi(path_datatrain_json_1,pathoutput_k_terms1)
+    pmi(path_datatrain_json_2,pathoutput_k_terms2)
+
+pmi_weekly()
 
 
 

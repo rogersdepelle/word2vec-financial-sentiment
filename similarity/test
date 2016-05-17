@@ -1,0 +1,39 @@
+from gensim.models import word2vec
+import numpy
+import os
+import json
+import csv
+
+
+'''
+model = word2vec.Word2Vec.load_word2vec_format('/home/danny/Dropbox/bins/vectors_big.bin', binary=True, unicode_errors='ignore')
+print(model.most_similar(['girl', 'father'], ['boy'], topn=3))
+
+word_a="father"
+word_b="mother"
+print(numpy.dot(model[word_a], model[word_b])/(numpy.linalg.norm(model[word_a])* numpy.linalg.norm(model[word_b])))
+print(model.n_similarity(word_a,word_b))
+'''
+
+def kterms(path_k_pos_neg,path_output):
+    #load the sets of k terms
+    json_file = open(path_k_pos_neg)
+    json_str = json_file.read()
+    k_terms = json.loads(json_str)
+
+    #retrieve the positive and negative words from json file
+    k_posi_words=[]
+    k_nega_words=[]
+
+    k_posi_words = k_terms['positive'][0:25]
+    k_nega_words = k_terms['negative'][0:25]
+    # persiting the results
+    with open(path_output, 'w') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',')
+        spamwriter.writerow(k_posi_words)
+        spamwriter.writerow(k_nega_words)
+
+kterms(os.getcwd() +'/../files/terms01.json',os.getcwd() +'/../files/kterms_repetido_pmi.csv')
+kterms(os.getcwd() +'/../files/terms02.json',os.getcwd() +'/../files/kterms_unico_pmi.csv')
+kterms(os.getcwd() +'/../files/terms03.json',os.getcwd() +'/../files/kterms_repetido_pmi_odds.csv')
+kterms(os.getcwd() +'/../files/terms04.json',os.getcwd() +'/../files/kterms_unico_pmi_odds.csv')

@@ -80,7 +80,7 @@ def Load_model(path_bin):
     model = word2vec.load(path_bin)
     return model
 
-def similarity_testsentences_ktearms(model,path_datatest_json,path_k_pos_neg):
+def similarity_testsentences_ktearms(model,path_datatest_json,path_k_pos_neg,path_outputh):
     #load news teste
     json_file = open(path_datatest_json)
     json_str = json_file.read()
@@ -158,18 +158,69 @@ def similarity_testsentences_ktearms(model,path_datatest_json,path_k_pos_neg):
         reviews_and_similaridade["values"]["mean_mean"]["negative"] = mean_mean_simil_neg
         arr_reviews_and_similaridade.append(reviews_and_similaridade)
     #write the result file
-    reviews_and_similaridade_file = open(os.getcwd() +'/../files/news_and_similarity02.json', "w")
+    reviews_and_similaridade_file = open(path_outputh, "w")
     json.dump(arr_reviews_and_similaridade, reviews_and_similaridade_file)
     reviews_and_similaridade_file.close()
 
+def executardiario():
+    #Load the model
+    model = word2vec.Word2Vec.load_word2vec_format('/home/danny/Dropbox/bins/vectors_big.bin', binary=True, unicode_errors='ignore')
 
-#model = Load_model('/media/danny/330F-BCA6/vectors_big.bin')
-path_datatest_json=os.getcwd() +'/../files/training_with_duplicates.json'
-path_k_pos_neg=os.getcwd() +'/../files/terms02.json'
+    #test data
+    path_datatest_json_1=os.getcwd() +'/../files/test_with_duplicates.json'
+    path_datatest_json_2=os.getcwd() +'/../files/test_without_duplicates.json'
 
-model = word2vec.Word2Vec.load_word2vec_format('/home/danny/Dropbox/bins/vectors_big.bin', binary=True, unicode_errors='ignore')
-#print(model.most_similar(['girl', 'father'], ['boy'], topn=3))
+    #kterms
+    path_k_pos_neg_1=os.getcwd() +'/../files/terms01.json'
+    path_k_pos_neg_2=os.getcwd() +'/../files/terms02.json'
+    path_k_pos_neg_3=os.getcwd() +'/../files/terms03.json'
+    path_k_pos_neg_4=os.getcwd() +'/../files/terms04.json'
 
-similarity_testsentences_ktearms(model,path_datatest_json,path_k_pos_neg)
+
+    #output files
+    path_output_1= os.getcwd() +'/../files/news_and_similarity01.json'
+    path_output_2= os.getcwd() +'/../files/news_and_similarity02.json'
+    path_output_3= os.getcwd() +'/../files/news_and_similarity03.json'
+    path_output_4= os.getcwd() +'/../files/news_and_similarity04.json'
+
+    similarity_testsentences_ktearms(model,path_datatest_json_1,path_k_pos_neg_1,path_output_1)
+    similarity_testsentences_ktearms(model,path_datatest_json_1,path_k_pos_neg_3,path_output_2)
+    similarity_testsentences_ktearms(model,path_datatest_json_2,path_k_pos_neg_2,path_output_3)
+    similarity_testsentences_ktearms(model,path_datatest_json_2,path_k_pos_neg_4,path_output_4)
+
+def executarsemana():
+    #Load the model
+    model = word2vec.Word2Vec.load_word2vec_format('/home/danny/Dropbox/bins/vectors_big.bin',binary=True, unicode_errors='ignore')
+
+    #test data
+    path_datatest_json_1=os.getcwd() +'/../files2/weekly_with_duplicates_test.json'
+    path_datatest_json_2=os.getcwd() +'/../files2/weekly_without_duplicates_test.json'
+
+    #kterms
+    path_k_pos_neg_1=os.getcwd() +'/../files2/terms01.json'
+    path_k_pos_neg_2=os.getcwd() +'/../files2/terms02.json'
+    path_k_pos_neg_3=os.getcwd() +'/../files2/terms03.json'
+    path_k_pos_neg_4=os.getcwd() +'/../files2/terms04.json'
+
+
+    #output files
+    path_output_1= os.getcwd() +'/../files2/news_and_similarity01.json'
+    path_output_2= os.getcwd() +'/../files2/news_and_similarity02.json'
+    path_output_3= os.getcwd() +'/../files2/news_and_similarity03.json'
+    path_output_4= os.getcwd() +'/../files2/news_and_similarity04.json'
+
+    similarity_testsentences_ktearms(model,path_datatest_json_1,path_k_pos_neg_1,path_output_1)
+    similarity_testsentences_ktearms(model,path_datatest_json_1,path_k_pos_neg_3,path_output_2)
+    similarity_testsentences_ktearms(model,path_datatest_json_2,path_k_pos_neg_2,path_output_3)
+    similarity_testsentences_ktearms(model,path_datatest_json_2,path_k_pos_neg_4,path_output_4)
+
+
+
+executarsemana()
+
+
+
+
+
 
 
