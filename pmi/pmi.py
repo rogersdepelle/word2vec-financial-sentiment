@@ -113,15 +113,3 @@ def pmi_weekly():
 
     pmi(path_datatrain_json_1,pathoutput_k_terms1)
     pmi(path_datatrain_json_2,pathoutput_k_terms2)
-
-pmi_weekly()
-
-
-
-
-
-
-
-
-
-    
