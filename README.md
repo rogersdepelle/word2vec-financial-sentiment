@@ -1,42 +1,31 @@
-# Word2vec Financial Sentiment
+# Word2vec Financial Sentiment #
 
-Issues:
+* Deep learning for financial news classification
+* Version 0.1
+* Collaborators: rogersprates, dannysv, brunogrisci & edimarmanica.
 
-pre-processing
+### Dependencies ###
 
-pmi
+* NTKL
+terminal
+```
+pip install ntkl
+``` 
+terminal python
+```
+import nltk
+>>> nltk.download()
+python -m nltk.downloader english-stopwords
+``` 
 
-similarity (word2vec)
+* Wor2Vec
+Install
+Corpus Dowload: https://mega.nz/#F!IBQT3YjK
 
-evaluation
 
-Format Files:
-
-**trannin/test**
-
-{
-
-  "id":{
-  
-    "label":"positive",
-    
-    "text":["word1", "worn2"..."wordN"]
-    
-  }
-  
-}
-
-**result**
-
-{
-  
-  "id":{
-    “label”:”positive”,
-    
-    "mean_max":{“positive”: SIMILATRITY, “negative”: SIMILATRITY},
-    
-    "mean_general":{“positive”: SIMILATRITY, “negative”: SIMILATRITY}
-  
-  }
-    
-}
+### Usage ###
+```
+python pre_processing news_file.xml  quotations_daily_file quotations_weekly_file 
+python pmi
+python similarity
+``` 
